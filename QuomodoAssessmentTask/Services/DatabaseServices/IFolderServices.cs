@@ -6,7 +6,7 @@ namespace QuomodoAssessmentTask.Services.DatabaseServices
 {
     public interface IFolderServices
     {
-        Task<GetFolderContentResponse> GetFolderContents(GetFolderContentsRequest request);
+        Task<GetFolderContentResponse> GetFolderContents(int Id);
         Task<Folder> CreateFolder(string folderName);
         Task<Folder> CreateSubFolder(CreateSubFolderRequest request);
         Task<bool> DeleteFolder(DeleteFolderRequest request);
