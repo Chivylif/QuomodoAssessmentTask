@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using QuomodoAssessmentTask.Data;
+using QuomodoAssessmentTask.Repository;
+using QuomodoAssessmentTask.Services.DatabaseServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc(R"v1", new() { Title = "QuomodoAssessmentTask", Version = "v1" });
-});
+builder.Services.AddScoped<IFolderServices, FolderServices>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 builder.Services.AddDbContext<QuomodoDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DevelopmentString")));
