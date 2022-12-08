@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddScoped<IFolderServices, FolderServices>();
 builder.Services.AddScoped<IUploadServices, UploadServices>();
+builder.Services.AddScoped<IUploadServicesServer, UploadServiceServer>();
 builder.Services.AddScoped<IFolderServicesServer, FolderServicesServer>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

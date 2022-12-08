@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using QuomodoAssessmentTask.DTOs.Requests;
+using QuomodoAssessmentTask.Models;
 using QuomodoAssessmentTask.Services.DatabaseServices;
+using QuomodoAssessmentTask.Services.ServerServices;
 
 namespace QuomodoAssessmentTask.Controllers
 {
@@ -10,10 +13,12 @@ namespace QuomodoAssessmentTask.Controllers
     public class UploadController : ControllerBase
     {
         private readonly IUploadServices _service;
+        private readonly IUploadServicesServer _serverService;
 
-        public UploadController(IUploadServices service)
+        public UploadController(IUploadServices service, IUploadServicesServer serverService)
         {
             _service = service;
+            _serverService = serverService;
         }
 
         [HttpPost]
@@ -27,9 +32,17 @@ namespace QuomodoAssessmentTask.Controllers
                     return BadRequest("File cannot be empty");
                 }
 
-                var url = await UploadFileToServer(request.Files);
-                var res = await _service.UploadFile(request, url);
-                return Ok(res);
+                //Uploads file to the server
+                var url = await _serverService.UploadFile(request);
+                
+                //Uploads to the database
+                if (!url.IsNullOrEmpty())
+                {
+                    var res = await _service.UploadFile(request, url);
+                    return Ok(res);
+                }
+
+                return BadRequest("Upload failed");
             }
             catch (Exception ex)
             {
@@ -38,36 +51,34 @@ namespace QuomodoAssessmentTask.Controllers
         }
 
         [HttpDelete]
-        [Route("delete")]
+        [Route("delete-file")]
         public async Task<IActionResult> DeleteFile([FromBody] DeleteFileRequest request)
         {
             try
-            {
+            {               
                 if (String.IsNullOrWhiteSpace(request.FileName))
                 {
                     return BadRequest("File Name cannot be empty");
                 }
 
-                var res = await _service.DeleteFile(request);
-                return Ok(res);
+                //Deletes file from the server
+                var result = await _serverService.DeleteFile(request);
+
+                if (result)
+                {
+                    //Deletes file from the database
+                    var res = await _service.DeleteFile(request);
+                    return Ok("File was deleted successfully");
+                }
+                else
+                {
+                    return BadRequest("Something went wrong");
+                }
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        private async Task<string> UploadFileToServer(IFormFile file)
-        {
-            var fileName = Path.GetFileName(file.FileName);
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            return fileName;
         }
     }
 }
