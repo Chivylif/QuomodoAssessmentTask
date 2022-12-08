@@ -20,6 +20,11 @@ namespace QuomodoAssessmentTask.Controllers
             _serverService = serverService;
         }
 
+        /// <summary>
+        /// Creates a folder on the server and database
+        /// </summary>
+        /// <param name="folderName"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("create/{folderName}")]
         public async Task<IActionResult> CreateFolder(string folderName)
@@ -51,6 +56,11 @@ namespace QuomodoAssessmentTask.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a sub-folder om both the server and database
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("create/subfolder")]
         public async Task<IActionResult> CreateSubFolder([FromBody] CreateSubFolderRequest request)
@@ -82,6 +92,11 @@ namespace QuomodoAssessmentTask.Controllers
             }
         }
 
+        /// <summary>
+        /// Renames a folder on the server and database
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("rename")]
         public async Task<IActionResult> RenameFolder([FromBody] RenameFolderRequest request)
@@ -114,6 +129,11 @@ namespace QuomodoAssessmentTask.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a folder on the server and database
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("delete")]
         public async Task<IActionResult> DeleteFolder([FromBody] DeleteFolderRequest request)
@@ -143,6 +163,11 @@ namespace QuomodoAssessmentTask.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets all folders contents from the database and server
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("get-folder-content")]
         public async Task<IActionResult> GetFolderContents([FromQuery] GetFolderContentsRequest request)
@@ -152,7 +177,11 @@ namespace QuomodoAssessmentTask.Controllers
                 var res = new GetFolderContentResponse();
 
                 //Gets the folder contents from the server
-                res = await _serverService.GetFolderContents(request);
+                if (request.FolderPath != "")
+                {
+                    res = await _serverService.GetFolderContents(request);
+                }
+                
                 if (res.FolderCount == 0 && res.FileCount == 0)
                 {
                     //Gets the folder contents from the database

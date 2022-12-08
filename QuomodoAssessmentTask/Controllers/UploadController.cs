@@ -21,6 +21,11 @@ namespace QuomodoAssessmentTask.Controllers
             _serverService = serverService;
         }
 
+        /// <summary>
+        /// Uploads a file to the server and database
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("upload")]
         public async Task<IActionResult> UploadFile([FromForm] UploadFilesRequest request)
@@ -50,6 +55,11 @@ namespace QuomodoAssessmentTask.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes files from the server and database
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("delete-file")]
         public async Task<IActionResult> DeleteFile([FromBody] DeleteFileRequest request)
