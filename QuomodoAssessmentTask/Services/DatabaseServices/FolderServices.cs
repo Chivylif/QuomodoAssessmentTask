@@ -113,10 +113,17 @@ namespace QuomodoAssessmentTask.Services.DatabaseServices
 
             var folder = await _folderRepo.GetById(where);
             folder.Name = request.NewName;
+            folder.UpdatedOn = DateTime.Now;
 
             var res = await _folderRepo.Update(folder);
 
             return res;
+        }
+
+        public async Task<IEnumerable<Folder>> GetAllFolders()
+        {
+            var folders = await _folderRepo.GetAll();
+            return folders;
         }
     }
 }

@@ -36,5 +36,10 @@ namespace QuomodoAssessmentTask.Services.DatabaseServices
 
             return res;
         }
+
+        public async Task<IEnumerable<Upload>> GetAllFiles()
+        {
+            return await _repo.GetAll();
+        }
     }
 }

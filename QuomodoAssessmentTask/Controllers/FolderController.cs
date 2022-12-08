@@ -93,6 +93,25 @@ namespace QuomodoAssessmentTask.Controllers
         }
 
         /// <summary>
+        /// Gets all folders
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("get-all-folders")]
+        public async Task<IActionResult> GetAllFolders()
+        {
+            try
+            {
+                var res = await _service.GetAllFolders();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Renames a folder on the server and database
         /// </summary>
         /// <param name="request"></param>

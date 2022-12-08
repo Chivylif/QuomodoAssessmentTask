@@ -12,8 +12,8 @@ using QuomodoAssessmentTask.Data;
 namespace QuomodoAssessmentTask.Migrations
 {
     [DbContext(typeof(QuomodoDbContext))]
-    [Migration("20221206164355_Inital-Db-Set-Up")]
-    partial class InitalDbSetUp
+    [Migration("20221208061659_Database-creation")]
+    partial class Databasecreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

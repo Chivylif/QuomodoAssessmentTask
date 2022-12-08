@@ -11,6 +11,7 @@ namespace QuomodoAssessmentTask.Services.DatabaseServices
         Task<Folder> CreateSubFolder(CreateSubFolderRequest request);
         Task<bool> DeleteFolder(DeleteFolderRequest request);
         Task<bool> RenameFolder(RenameFolderRequest request);
+        Task<IEnumerable<Folder>> GetAllFolders();
     }
 }
 

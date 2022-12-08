@@ -56,6 +56,25 @@ namespace QuomodoAssessmentTask.Controllers
         }
 
         /// <summary>
+        /// Gets all files from the database
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("get-all-files")]
+        public async Task<IActionResult> GetAllFiles()
+        {
+            try
+            {
+                var res = await _service.GetAllFiles();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Deletes files from the server and database
         /// </summary>
         /// <param name="request"></param>

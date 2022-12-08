@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace QuomodoAssessmentTask.Migrations
 {
     /// <inheritdoc />
-    public partial class InitalDbSetUp : Migration
+    public partial class Databasecreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
