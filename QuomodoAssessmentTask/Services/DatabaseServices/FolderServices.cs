@@ -42,6 +42,24 @@ namespace QuomodoAssessmentTask.Services.DatabaseServices
 
         public async Task<bool> DeleteFolder(DeleteFolderRequest request)
         {
+            //Delete all files in folder
+            var filesToDelete = new List<Upload>();
+            
+            Expression<Func<Upload, bool>> where2 = f => f.FolderId == request.FolderId;
+            var files = await _fileRepo.GetAll();
+            if (files != null)
+            {
+                filesToDelete = files.Where(where2.Compile()).ToList();
+            }
+            
+            if (filesToDelete != null)
+            {
+                foreach (var file in filesToDelete)
+                {
+                    await _fileRepo.Delete(file);
+                }
+            }
+
             Expression<Func<Folder, bool>> where = f => f.Id == request.FolderId;
 
             var folder = await _folderRepo.GetById(where);
@@ -58,20 +76,32 @@ namespace QuomodoAssessmentTask.Services.DatabaseServices
 
             Expression<Func<Folder, bool>> where = (x) => x.Id == Id;
             Folder parentFolder = await _folderRepo.GetById(where);
+            var folderNames = new List<string>();
+            
+            foreach (var folder in subFolders)
+            {
+                folderNames.Add(folder.Name);
+            }
 
             var folderCount = subFolders.Count();
 
             //Get File Details
             var allFiles = await _fileRepo.GetAll();
             var files = allFiles.ToList().Where((x) => x.FolderId == Id);
+            var fileNames = new List<string>();
+
+            foreach (var file in files)
+            {
+                fileNames.Add(file.Name);
+            }
 
             var fileCount = files.Count();
 
             return new GetFolderContentResponse
             {
                 Folder = parentFolder.Name,
-                SubFolders = subFolders.ToList(),
-                Files = files.ToList(),
+                SubFolders = folderNames,
+                Files = fileNames,
                 FolderCount = folderCount,
                 FileCount = fileCount
             };

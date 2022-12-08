@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using QuomodoAssessmentTask.Data;
 using QuomodoAssessmentTask.Repository;
 using QuomodoAssessmentTask.Services.DatabaseServices;
+using QuomodoAssessmentTask.Services.ServerServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IFolderServices, FolderServices>();
+builder.Services.AddScoped<IUploadServices, UploadServices>();
+builder.Services.AddScoped<IFolderServicesServer, FolderServicesServer>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 builder.Services.AddDbContext<QuomodoDbContext>(options => 
